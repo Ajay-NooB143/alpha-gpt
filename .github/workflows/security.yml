@@ -1,0 +1,126 @@
+# Security scanning workflow for alpha-gpt
+# Runs Bandit (Python security linter) and pip-audit (dependency vulnerability scanner)
+# Triggers: push, pull_request, and weekly schedule
+
+name: Security Scan
+
+on:
+  push:
+    branches: [ main, develop, "feature/**", "bugfix/**" ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run every Monday at 08:00 UTC
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+# Cancel in-progress runs for the same branch/PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bandit:
+    name: Bandit – Python Security Scan
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-security-${{ hashFiles('**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-security-
+            ${{ runner.os }}-pip-
+
+      - name: Install Bandit
+        run: pip install bandit[toml]
+
+      - name: Run Bandit security scan
+        # -r   recursive scan
+        # -ll  report medium and higher severity issues
+        # -ii  report medium and higher confidence issues
+        run: |
+          bandit -r src/ -ll -ii -f json -o bandit-report.json || true
+          bandit -r src/ -ll -ii
+
+      - name: Upload Bandit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-security-report
+          path: bandit-report.json
+
+  dependency-audit:
+    name: pip-audit – Dependency Vulnerability Scan
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-audit-${{ hashFiles('**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-audit-
+            ${{ runner.os }}-pip-
+
+      - name: Install pip-audit and project dependencies
+        run: |
+          pip install --upgrade pip pip-audit
+          pip install -e . --quiet || true
+
+      - name: Run pip-audit vulnerability scan
+        run: |
+          pip-audit --format json --output pip-audit-report.json || true
+          pip-audit
+
+      - name: Upload pip-audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pip-audit-report
+          path: pip-audit-report.json
+
+  report-status:
+    name: Security Status Summary
+    runs-on: ubuntu-latest
+    needs: [bandit, dependency-audit]
+    if: always()
+
+    permissions: {}
+
+    steps:
+      - name: Check scan results
+        run: |
+          echo "Bandit status   : ${{ needs.bandit.result }}"
+          echo "pip-audit status: ${{ needs.dependency-audit.result }}"
+          if [ "${{ needs.bandit.result }}" = "failure" ] || \
+             [ "${{ needs.dependency-audit.result }}" = "failure" ]; then
+            echo "::error::One or more security scans failed – review the uploaded reports."
+            exit 1
+          fi
+          echo "All security scans passed."

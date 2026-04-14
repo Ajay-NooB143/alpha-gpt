@@ -1,0 +1,92 @@
+# Test coverage workflow for alpha-gpt
+# Runs pytest with pytest-cov, generates reports, and comments on PRs
+# Triggers: push, pull_request
+
+name: Coverage Report
+
+on:
+  push:
+    branches: [ main, develop, "feature/**", "bugfix/**" ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+# Cancel in-progress runs for the same branch/PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  coverage:
+    name: Run Tests & Generate Coverage Report
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write   # required to comment on PRs
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-coverage-${{ hashFiles('**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-coverage-
+            ${{ runner.os }}-pip-
+
+      - name: Install project and test dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -e . --quiet || true
+          pip install pytest pytest-cov coverage[toml]
+
+      - name: Run pytest with coverage
+        # Generate both XML (for upload/comment) and terminal report
+        run: |
+          python -m pytest tests/unit_tests \
+            --cov=src \
+            --cov-report=xml:coverage.xml \
+            --cov-report=term-missing \
+            --cov-report=html:htmlcov \
+            -v
+
+      - name: Upload XML coverage report as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml-report
+          path: coverage.xml
+
+      - name: Upload HTML coverage report as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html-report
+          path: htmlcov/
+
+      # Post a coverage summary comment on pull requests
+      - name: Comment coverage on PR
+        if: github.event_name == 'pull_request'
+        uses: MishaKav/pytest-coverage-comment@main
+        with:
+          pytest-xml-coverage-path: ./coverage.xml
+          title: "📊 Test Coverage Report"
+          badge-title: Coverage
+          hide-badge: false
+          hide-report: false
+          create-new-comment: false
+          hide-comment: false
+          report-only-changed-files: false
+
+      - name: Write coverage summary to job
+        run: |
+          echo "### Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          python -m coverage report --skip-empty >> $GITHUB_STEP_SUMMARY || \
+            echo "No coverage data found – check test run output." >> $GITHUB_STEP_SUMMARY
