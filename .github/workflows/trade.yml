@@ -1,20 +1,23 @@
 name: Trading Bot
 
 on:
-  push:
-    branches: [ main ]
   schedule:
-    - cron: '0 * * * *' # every hour
-  workflow_dispatch:
+    - cron: '0 * * * *' # Run every hour
+  workflow_dispatch: # Allow manual trigger
 
 jobs:
-  run-trading-bot:
+  trade:
+    name: Run Trading Bot
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 55
+    permissions:
+      contents: read
+
     env:
       BINANCE_API_KEY: ${{ secrets.BINANCE_API_KEY }}
       BINANCE_API_SECRET: ${{ secrets.BINANCE_API_SECRET }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     steps:
@@ -24,7 +27,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: Cache pip
         uses: actions/cache@v4
@@ -34,25 +37,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - name: Install build tools
-        run: |
-          python -m pip install --upgrade pip setuptools wheel build
-
       - name: Install dependencies
         run: |
-          if [ -f pyproject.toml ]; then
-            pip install -e '.[dev]' || pip install . || echo "Failed to install with pip install .[dev], proceeding without install"
-          else
-            echo "No pyproject.toml found, skipping install"
-          fi
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -e '.[dev]' || pip install .
 
       - name: Run trading bot
-        run: |
-          python bot/main.py
+        run: python bot/main.py
 
-      - name: Upload logs on failure
-        if: failure()
+      - name: Upload logs
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: trading-bot-logs
-          path: ./logs || true
+          name: trading-bot-logs-${{ github.run_id }}
+          path: logs/
+          if-no-files-found: ignore
