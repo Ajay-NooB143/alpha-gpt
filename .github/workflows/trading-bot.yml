@@ -48,7 +48,7 @@ jobs:
 
       - name: Run trading bot
         run: |
-          python main.py
+          python -m src.main
 
       - name: Upload logs on failure
         if: failure()
