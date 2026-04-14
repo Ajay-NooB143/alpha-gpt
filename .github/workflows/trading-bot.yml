@@ -46,9 +46,10 @@ jobs:
             echo "No pyproject.toml found, skipping install"
           fi
 
-      - name: Run trading bot
+      - name: Run app
         run: |
-          python main.py
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
+          python -m src.main
 
       - name: Upload logs on failure
         if: failure()
