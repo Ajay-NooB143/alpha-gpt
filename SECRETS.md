@@ -57,8 +57,6 @@ To add a secret: **Settings → Secrets and variables → Actions → New reposi
 |---------------|-------------|
 | `trade.yml` | `BINANCE_API_KEY`, `BINANCE_API_SECRET`, `TELEGRAM_BOT_TOKEN`, `OPENAI_API_KEY`, `DATABASE_URL` |
 | `trading-bot.yml` | `BINANCE_API_KEY`, `BINANCE_API_SECRET`, `TELEGRAM_BOT_TOKEN`, `DATABASE_URL` |
-| `deploy-bot.yml` | `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY`, `VPS_SSH_PORT` |
-| `integration-tests.yml` | `ANTHROPIC_API_KEY`, `LANGSMITH_API_KEY` |
 | `lint.yml` | *(none)* |
 | `test.yml` | *(none)* |
 | `docker.yml` | *(none)* |
