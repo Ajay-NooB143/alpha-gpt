@@ -30,7 +30,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
 
@@ -40,15 +40,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          if [ -f pyproject.toml ]; then
-            pip install -e '.[dev]' || pip install . || echo "Failed to install with pip install .[dev], proceeding without install"
-          else
-            echo "No pyproject.toml found, skipping install"
-          fi
+          pip install -r requirements.txt
 
-      - name: Run trading bot
+      - name: Run app
         run: |
-          python main.py
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
+          python -m src.main
 
       - name: Upload logs on failure
         if: failure()
