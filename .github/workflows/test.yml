@@ -31,12 +31,14 @@ jobs:
       - name: Install dependencies
         run: |
           curl -LsSf https://astral.sh/uv/install.sh | sh
+          export PATH="$HOME/.local/bin:$PATH"
           uv venv
           uv pip install -e .
           uv pip install pytest pytest-cov pytest-asyncio
 
       - name: Run tests with coverage
         run: |
+          export PATH="$HOME/.local/bin:$PATH"
           uv run pytest tests/unit_tests \
             --cov=src \
             --cov-report=xml \
