@@ -8,6 +8,8 @@ from typing import Optional
 
 from dotenv import load_dotenv
 
+from agent.graph import create_graph
+
 load_dotenv()
 
 logging.basicConfig(
@@ -19,8 +21,6 @@ logger = logging.getLogger(__name__)
 
 async def run_workflow(trading_idea: Optional[str] = None) -> None:
     """Run the alpha generation workflow."""
-    from agent.graph import create_graph
-
     graph = create_graph()
 
     idea = trading_idea or os.environ.get(
@@ -34,7 +34,11 @@ async def run_workflow(trading_idea: Optional[str] = None) -> None:
     logger.info("Starting AlphaGPT workflow with idea: %s", idea)
     logger.info("Thread ID: %s", thread_id)
 
-    result = await graph.ainvoke({"trading_idea": idea}, config=config)
+    try:
+        result = await graph.ainvoke({"trading_idea": idea}, config=config)
+    except Exception:
+        logger.exception("AlphaGPT workflow failed")
+        raise
 
     coded_alphas = result.get("coded_alphas", [])
     logger.info("Workflow completed. Generated %d coded alpha(s).", len(coded_alphas))
