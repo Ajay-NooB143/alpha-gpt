@@ -5,9 +5,11 @@ This file serves as the main interface for the checkpointing system in AlphaGPT.
 It provides a clean API for integrating with LangGraph and working with the database.
 """
 
+import logging
 import os
 from typing import Dict, Any, List, Optional, Union
 
+import sqlalchemy.exc
 from langgraph.checkpoint.postgres import PostgresSaver
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from langgraph.checkpoint.base import BaseCheckpointSaver
@@ -33,6 +35,9 @@ from agent.database.operations.db_connection import (
 )
 
 
+logger = logging.getLogger(__name__)
+
+
 class AlphaGPTCheckpointer:
     """
     Custom checkpointer for AlphaGPT that saves state data to both LangGraph checkpointer
@@ -49,8 +54,12 @@ class AlphaGPTCheckpointer:
         self.postgres_saver = postgres_saver or self._create_postgres_saver()
         self.engine = get_db_engine()
 
-        # Ensure tables exist
-        create_tables(self.engine)
+        # Ensure tables exist (skip if database is unavailable)
+        try:
+            create_tables(self.engine)
+        except (sqlalchemy.exc.OperationalError, sqlalchemy.exc.DatabaseError) as e:
+            logger.warning("Could not create database tables: %s", e)
+            logger.warning("Continuing without persistent storage.")
 
     def _create_postgres_saver(self) -> PostgresSaver:
         """Create a PostgresSaver instance for LangGraph"""
@@ -67,17 +76,16 @@ class AlphaGPTCheckpointer:
             # Last resort fallback
             from langgraph.checkpoint.memory import MemorySaver
 
-            print(
-                f"Warning: Using MemorySaver as fallback - PostgreSQL connection failed: {str(e)}"
-            )
-            # Print detailed error info
             import traceback
 
-            print(
-                f"Connection details: host={db_params['host']}, port={db_params['port']}, "
-                f"db={db_params['db']}, user={db_params['user']}"
+            logger.warning(
+                "Using MemorySaver as fallback - PostgreSQL connection failed: %s", e
             )
-            print(f"Error details: {traceback.format_exc()}")
+            logger.warning(
+                "Connection details: host=%s, port=%s, db=%s, user=%s",
+                db_params['host'], db_params['port'], db_params['db'], db_params['user'],
+            )
+            logger.debug("Error details: %s", traceback.format_exc())
 
             return MemorySaver()
 
