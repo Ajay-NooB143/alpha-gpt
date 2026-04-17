@@ -1,17 +1,24 @@
-"""
-Backtest result model definition for AlphaGPT
+"""Backtest result model definition for AlphaGPT
 """
 from datetime import datetime
+
 from sqlalchemy import (
-    Column, Integer, String, ForeignKey, Boolean, Float, JSON, DateTime
+    JSON,
+    Boolean,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
 )
 from sqlalchemy.orm import relationship
+
 from agent.database.models.base import Base
 
 
 class BacktestResult(Base):
-    """
-    SQLAlchemy model for representing backtest results for an alpha factor
+    """SQLAlchemy model for representing backtest results for an alpha factor
     """
     __tablename__ = "backtest_results"
 

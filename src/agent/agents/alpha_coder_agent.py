@@ -1,17 +1,18 @@
 # src/agent/agents/alpha_coder_agent.py
-from typing import Any, Dict, List
+from typing import Any, Dict
+
 from langchain_core.runnables import RunnableConfig
 from langchain_openai import ChatOpenAI
-from agent.state import State
+
 from agent.prompts.alpha_coder_prompts import (
     ALPHA_CODER_SYSTEM_PROMPT,
     ALPHA_CODER_USER_PROMPT,
 )
+from agent.state import State
 
 
 async def alpha_coder_agent(state: State, config: RunnableConfig) -> Dict[str, Any]:
     """Generate Python code for the seed alpha factors."""
-
     # Initialize LLM
     llm = ChatOpenAI(model="gpt-4o", temperature=0.1)
 

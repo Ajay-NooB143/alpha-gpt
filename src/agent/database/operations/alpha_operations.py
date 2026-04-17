@@ -1,8 +1,8 @@
+"""Alpha factor database operations for AlphaGPT
 """
-Alpha factor database operations for AlphaGPT
-"""
-from typing import Dict, Any, List, Optional
 import uuid
+from typing import Any, Dict, List, Optional
+
 from sqlalchemy.orm import Session
 
 from agent.database.models.alpha import Alpha
@@ -16,8 +16,7 @@ def save_alphas(
     hypothesis_id: int,
     session: Optional[Session] = None
 ) -> List[Alpha]:
-    """
-    Save alpha data from the graph state to our database
+    """Save alpha data from the graph state to our database
     
     Args:
         thread_id: LangGraph thread ID
@@ -106,8 +105,7 @@ def save_alphas(
 
 
 def get_alphas_for_hypothesis(hypothesis_id: int) -> List[Dict[str, Any]]:
-    """
-    Get all alphas for a specific hypothesis
+    """Get all alphas for a specific hypothesis
     
     Args:
         hypothesis_id: The hypothesis ID to query

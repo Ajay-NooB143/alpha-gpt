@@ -1,15 +1,17 @@
 # src/agent/agents/alpha_generator_agent.py
-from typing import Any, Dict, List, Optional
+import json
+from typing import Any, Dict
+
 from langchain_core.runnables import RunnableConfig
 from langchain_openai import ChatOpenAI
-from agent.state import State
+
 from agent.prompts.alpha_prompts import (
-    ALPHA_SYSTEM_PROMPT,
     ALPHA_INITIAL_PROMPT,
     ALPHA_ITERATION_PROMPT,
     ALPHA_OUTPUT_FORMAT,
+    ALPHA_SYSTEM_PROMPT,
 )
-import json
+from agent.state import State
 
 
 async def alpha_generator_agent(state: State, config: RunnableConfig) -> Dict[str, Any]:
@@ -21,7 +23,6 @@ async def alpha_generator_agent(state: State, config: RunnableConfig) -> Dict[st
     3. Provides descriptions and variable definitions
     4. Returns factors in a structured JSON format
     """
-
     # Initialize LLM
     llm = ChatOpenAI(model="gpt-4o", temperature=0.4)
 

@@ -1,7 +1,7 @@
+"""Hypothesis database operations for AlphaGPT
 """
-Hypothesis database operations for AlphaGPT
-"""
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
+
 from sqlalchemy.orm import Session
 
 from agent.database.models.hypothesis import Hypothesis
@@ -14,8 +14,7 @@ def save_hypothesis(
     state_values: Dict[str, Any],
     session: Optional[Session] = None
 ) -> Optional[Hypothesis]:
-    """
-    Save hypothesis data from the graph state to our database
+    """Save hypothesis data from the graph state to our database
     
     Args:
         thread_id: LangGraph thread ID
@@ -85,8 +84,7 @@ def save_hypothesis(
 
 
 def get_hypothesis_history(thread_id: str) -> List[Dict[str, Any]]:
-    """
-    Get the history of hypotheses for a thread
+    """Get the history of hypotheses for a thread
     
     Args:
         thread_id: The thread ID to query

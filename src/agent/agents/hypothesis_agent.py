@@ -1,23 +1,22 @@
 # src/agent/agents/hypothesis_agent.py
-from typing import Any, Dict
 import json
+from typing import Any, Dict
 
 from langchain_core.runnables import RunnableConfig
 from langchain_openai import ChatOpenAI
 
-from agent.state import State
+from agent.database.checkpointer_api import get_checkpoint_manager
 from agent.prompts.hypothesis_prompts import (
-    HYPOTHESIS_SYSTEM_PROMPT,
     HYPOTHESIS_INITIAL_PROMPT,
     HYPOTHESIS_ITERATION_PROMPT,
     HYPOTHESIS_OUTPUT_FORMAT,
+    HYPOTHESIS_SYSTEM_PROMPT,
 )
-from agent.database.checkpointer_api import get_checkpoint_manager
+from agent.state import State
 
 
 async def hypothesis_agent(state: State, config: RunnableConfig) -> Dict[str, Any]:
     """Generate or refine a trading hypothesis."""
-
     # Initialize LLM
     llm = ChatOpenAI(model="gpt-4o", temperature=0.3)
 

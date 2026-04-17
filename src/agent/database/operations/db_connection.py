@@ -1,16 +1,16 @@
-"""
-Database connection utilities for AlphaGPT
+"""Database connection utilities for AlphaGPT
 """
 
 import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
 from agent.database.models.base import Base
 
 
 def get_db_url():
-    """
-    Generate PostgreSQL connection URL from environment variables
+    """Generate PostgreSQL connection URL from environment variables
 
     Returns:
         Connection URL string for PostgreSQL
@@ -25,8 +25,7 @@ def get_db_url():
 
 
 def get_db_connection_params():
-    """
-    Get database connection parameters from environment variables
+    """Get database connection parameters from environment variables
 
     Returns:
         Dictionary with connection parameters
@@ -41,8 +40,7 @@ def get_db_connection_params():
 
 
 def get_db_engine():
-    """
-    Create and return a SQLAlchemy engine using environment variables
+    """Create and return a SQLAlchemy engine using environment variables
 
     Returns:
         SQLAlchemy engine instance
@@ -52,8 +50,7 @@ def get_db_engine():
 
 
 def get_session_factory(engine=None):
-    """
-    Get a sessionmaker for creating database sessions
+    """Get a sessionmaker for creating database sessions
 
     Args:
         engine: Optional SQLAlchemy engine
@@ -68,8 +65,7 @@ def get_session_factory(engine=None):
 
 
 def create_tables(engine=None):
-    """
-    Create all tables defined in the models
+    """Create all tables defined in the models
 
     Args:
         engine: Optional SQLAlchemy engine

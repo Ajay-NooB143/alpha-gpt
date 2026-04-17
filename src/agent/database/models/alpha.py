@@ -1,15 +1,15 @@
-"""
-Alpha model definition for AlphaGPT
+"""Alpha model definition for AlphaGPT
 """
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
+
 from agent.database.models.base import Base
 
 
 class Alpha(Base):
-    """
-    SQLAlchemy model for representing an alpha factor
+    """SQLAlchemy model for representing an alpha factor
     """
     __tablename__ = "alphas"
 
