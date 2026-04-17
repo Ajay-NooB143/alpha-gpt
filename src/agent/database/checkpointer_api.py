@@ -49,8 +49,12 @@ class AlphaGPTCheckpointer:
         self.postgres_saver = postgres_saver or self._create_postgres_saver()
         self.engine = get_db_engine()
 
-        # Ensure tables exist
-        create_tables(self.engine)
+        # Ensure tables exist (skip if database is unavailable)
+        try:
+            create_tables(self.engine)
+        except Exception as e:
+            print(f"Warning: Could not create database tables: {str(e)}")
+            print("Continuing without persistent storage.")
 
     def _create_postgres_saver(self) -> PostgresSaver:
         """Create a PostgresSaver instance for LangGraph"""
