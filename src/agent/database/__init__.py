@@ -1,5 +1,4 @@
-"""
-Database package for AlphaGPT
+"""Database package for AlphaGPT.
 
 This package contains modules for database operations and models.
 """

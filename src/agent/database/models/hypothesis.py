@@ -1,16 +1,14 @@
-"""
-Hypothesis model definition for AlphaGPT
-"""
+"""Hypothesis model definition for AlphaGPT."""
 
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime
+
+from sqlalchemy import Column, DateTime, Integer, String
+
 from agent.database.models.base import Base
 
 
 class Hypothesis(Base):
-    """
-    SQLAlchemy model for representing a trading hypothesis
-    """
+    """SQLAlchemy model for representing a trading hypothesis."""
 
     __tablename__ = "hypotheses"
 

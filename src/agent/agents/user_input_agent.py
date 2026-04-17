@@ -1,6 +1,9 @@
+"""Agent for capturing user trading idea input."""
 # src/agent/agents/user_input_agent.py
 from typing import Any, Dict
+
 from langchain_core.runnables import RunnableConfig
+
 from agent.state import State
 
 

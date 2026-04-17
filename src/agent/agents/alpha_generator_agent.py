@@ -1,15 +1,21 @@
+"""Agent for generating mathematical alpha factors from a trading hypothesis."""
 # src/agent/agents/alpha_generator_agent.py
-from typing import Any, Dict, List, Optional
+import json
+import logging
+from typing import Any, Dict
+
 from langchain_core.runnables import RunnableConfig
 from langchain_openai import ChatOpenAI
-from agent.state import State
+
 from agent.prompts.alpha_prompts import (
-    ALPHA_SYSTEM_PROMPT,
     ALPHA_INITIAL_PROMPT,
     ALPHA_ITERATION_PROMPT,
     ALPHA_OUTPUT_FORMAT,
+    ALPHA_SYSTEM_PROMPT,
 )
-import json
+from agent.state import State
+
+logger = logging.getLogger(__name__)
 
 
 async def alpha_generator_agent(state: State, config: RunnableConfig) -> Dict[str, Any]:
@@ -21,7 +27,6 @@ async def alpha_generator_agent(state: State, config: RunnableConfig) -> Dict[st
     3. Provides descriptions and variable definitions
     4. Returns factors in a structured JSON format
     """
-
     # Initialize LLM
     llm = ChatOpenAI(model="gpt-4o", temperature=0.4)
 
@@ -94,9 +99,10 @@ async def alpha_generator_agent(state: State, config: RunnableConfig) -> Dict[st
         return {"seed_alphas": seed_alphas}
 
     except Exception as e:
-        print(f"Error generating alpha factors: {str(e)}")
-        print(
-            f"Raw response: {response.content if 'response' in locals() else 'No response'}"
+        logger.warning("Error generating alpha factors: %s", str(e))
+        logger.warning(
+            "Raw response: %s",
+            response.content if "response" in locals() else "No response",
         )
 
         # Return empty list to avoid breaking the flow

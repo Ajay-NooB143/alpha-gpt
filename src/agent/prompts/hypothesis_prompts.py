@@ -1,3 +1,4 @@
+"""Prompts for the hypothesis agent."""
 # src/agent/prompts/hypothesis_prompts.py
 HYPOTHESIS_SYSTEM_PROMPT = """You are a quantitative finance researcher specializing in alpha factor hypothesis generation.
 

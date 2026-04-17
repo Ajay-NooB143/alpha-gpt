@@ -1,21 +1,20 @@
+"""LangGraph workflow definition for the alpha generation pipeline."""
 # src/agent/graph.py
 import os
 
-from langgraph.graph import StateGraph
 from langgraph.checkpoint.memory import MemorySaver
+from langgraph.graph import StateGraph
 
-
-from agent.state import State
-from agent.agents.user_input_agent import user_input_agent
-from agent.agents.hypothesis_agent import hypothesis_agent
-from agent.agents.alpha_generator_agent import alpha_generator_agent
 from agent.agents.alpha_coder_agent import alpha_coder_agent
+from agent.agents.alpha_generator_agent import alpha_generator_agent
+from agent.agents.hypothesis_agent import hypothesis_agent
+from agent.agents.user_input_agent import user_input_agent
 from agent.database.checkpointer_api import get_checkpoint_manager
+from agent.state import State
 
 
 def create_graph():
     """Create and configure the LangGraph workflow."""
-
     # Define the graph workflow
     workflow = StateGraph(State)
 

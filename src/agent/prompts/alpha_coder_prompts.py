@@ -1,3 +1,4 @@
+"""Prompts for the alpha coder agent."""
 # src/agent/prompts/alpha_coder_prompts.py
 ALPHA_CODER_SYSTEM_PROMPT = """You are an expert quantitative finance programmer specializing in implementing alpha factors in Python.
 Your task is to convert mathematical alpha expressions into executable Python code.
