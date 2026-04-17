@@ -1,4 +1,4 @@
-"""Database models package
+"""Database models package.
 
 This package contains SQLAlchemy models for the AlphaGPT database.
 """

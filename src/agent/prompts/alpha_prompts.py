@@ -1,3 +1,4 @@
+"""Prompts for the alpha generator agent."""
 # src/agent/prompts/alpha_prompts.py
 ALPHA_SYSTEM_PROMPT = """You are a quantitative finance researcher specializing in alpha factor development.
 

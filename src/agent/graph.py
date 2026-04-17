@@ -1,3 +1,4 @@
+"""LangGraph workflow definition for the alpha generation pipeline."""
 # src/agent/graph.py
 import os
 

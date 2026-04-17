@@ -1,3 +1,4 @@
+"""Agent for generating and refining trading hypotheses."""
 # src/agent/agents/hypothesis_agent.py
 import json
 from typing import Any, Dict

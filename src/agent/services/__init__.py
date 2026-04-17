@@ -1,4 +1,4 @@
-"""Services package for AlphaGPT
+"""Services package for AlphaGPT.
 
 This package contains service modules that provide higher-level functionality.
 """

@@ -1,5 +1,4 @@
-"""Alpha model definition for AlphaGPT
-"""
+"""Alpha model definition for AlphaGPT."""
 from datetime import datetime
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
@@ -9,8 +8,7 @@ from agent.database.models.base import Base
 
 
 class Alpha(Base):
-    """SQLAlchemy model for representing an alpha factor
-    """
+    """SQLAlchemy model for representing an alpha factor."""
     __tablename__ = "alphas"
 
     id = Column(Integer, primary_key=True, autoincrement=True)

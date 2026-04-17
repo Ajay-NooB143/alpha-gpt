@@ -1,5 +1,7 @@
+"""Agent for generating mathematical alpha factors from a trading hypothesis."""
 # src/agent/agents/alpha_generator_agent.py
 import json
+import logging
 from typing import Any, Dict
 
 from langchain_core.runnables import RunnableConfig
@@ -12,6 +14,8 @@ from agent.prompts.alpha_prompts import (
     ALPHA_SYSTEM_PROMPT,
 )
 from agent.state import State
+
+logger = logging.getLogger(__name__)
 
 
 async def alpha_generator_agent(state: State, config: RunnableConfig) -> Dict[str, Any]:
@@ -95,9 +99,10 @@ async def alpha_generator_agent(state: State, config: RunnableConfig) -> Dict[st
         return {"seed_alphas": seed_alphas}
 
     except Exception as e:
-        print(f"Error generating alpha factors: {str(e)}")
-        print(
-            f"Raw response: {response.content if 'response' in locals() else 'No response'}"
+        logger.warning("Error generating alpha factors: %s", str(e))
+        logger.warning(
+            "Raw response: %s",
+            response.content if "response" in locals() else "No response",
         )
 
         # Return empty list to avoid breaking the flow

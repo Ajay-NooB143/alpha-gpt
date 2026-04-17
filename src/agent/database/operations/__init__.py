@@ -1,4 +1,4 @@
-"""Database operations package
+"""Database operations package.
 
 This package contains database operations for the AlphaGPT database.
 """

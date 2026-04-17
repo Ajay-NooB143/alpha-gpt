@@ -1,4 +1,6 @@
+"""Agent for generating Python code for seed alpha factors."""
 # src/agent/agents/alpha_coder_agent.py
+import logging
 from typing import Any, Dict
 
 from langchain_core.runnables import RunnableConfig
@@ -9,6 +11,8 @@ from agent.prompts.alpha_coder_prompts import (
     ALPHA_CODER_USER_PROMPT,
 )
 from agent.state import State
+
+logger = logging.getLogger(__name__)
 
 
 async def alpha_coder_agent(state: State, config: RunnableConfig) -> Dict[str, Any]:
@@ -52,7 +56,7 @@ async def alpha_coder_agent(state: State, config: RunnableConfig) -> Dict[str, A
             coded_alphas.append(coded_alpha)
 
         except Exception as e:
-            print(f"Error coding alpha {alpha.get('alphaID')}: {str(e)}")
+            logger.warning("Error coding alpha %s: %s", alpha.get("alphaID"), str(e))
 
     # Return coded alphas
     return {"coded_alphas": coded_alphas}

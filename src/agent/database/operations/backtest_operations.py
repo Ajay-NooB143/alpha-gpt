@@ -1,5 +1,4 @@
-"""Backtest result database operations for AlphaGPT
-"""
+"""Backtest result database operations for AlphaGPT."""
 from typing import Any, Dict, List, Optional
 
 from sqlalchemy.orm import Session
@@ -13,10 +12,10 @@ def save_backtest_results(
     thread_id: str,
     checkpoint_id: str,
     state_values: Dict[str, Any],
-    session: Optional[Session] = None
+    session: Optional[Session] = None,
 ) -> List[BacktestResult]:
-    """Save backtest results from the graph state to our database
-    
+    """Save backtest results from the graph state to our database.
+
     Args:
         thread_id: LangGraph thread ID
         checkpoint_id: LangGraph checkpoint ID
@@ -81,8 +80,8 @@ def save_backtest_results(
 
 
 def get_backtest_results_for_alpha(alpha_id: int) -> List[Dict[str, Any]]:
-    """Get all backtest results for a specific alpha
-    
+    """Get all backtest results for a specific alpha.
+
     Args:
         alpha_id: The alpha ID to query
         

@@ -1,5 +1,4 @@
-"""Backtest result model definition for AlphaGPT
-"""
+"""Backtest result model definition for AlphaGPT."""
 from datetime import datetime
 
 from sqlalchemy import (
@@ -18,8 +17,7 @@ from agent.database.models.base import Base
 
 
 class BacktestResult(Base):
-    """SQLAlchemy model for representing backtest results for an alpha factor
-    """
+    """SQLAlchemy model for representing backtest results for an alpha factor."""
     __tablename__ = "backtest_results"
 
     id = Column(Integer, primary_key=True, autoincrement=True)

@@ -1,4 +1,4 @@
-"""AlphaGPT Checkpointer API
+"""AlphaGPT Checkpointer API.
 
 This file serves as the main interface for the checkpointing system in AlphaGPT.
 It provides a clean API for integrating with LangGraph and working with the database.
@@ -36,8 +36,10 @@ logger = logging.getLogger(__name__)
 
 
 class AlphaGPTCheckpointer:
-    """Custom checkpointer for AlphaGPT that saves state data to both LangGraph checkpointer
-    and our custom database tables for querying later.
+    """Custom checkpointer for AlphaGPT.
+
+    Saves state data to both LangGraph checkpointer and our custom database
+    tables for querying later.
     """
 
     def __init__(self, postgres_saver: Union[PostgresSaver, AsyncPostgresSaver] = None):
@@ -57,7 +59,7 @@ class AlphaGPTCheckpointer:
             logger.warning("Continuing without persistent storage.")
 
     def _create_postgres_saver(self) -> PostgresSaver:
-        """Create a PostgresSaver instance for LangGraph"""
+        """Create a PostgresSaver instance for LangGraph."""
         # Get database URL from centralized function
         db_url = get_db_url()
 
@@ -85,11 +87,11 @@ class AlphaGPTCheckpointer:
             return MemorySaver()
 
     def get_saver(self) -> BaseCheckpointSaver:
-        """Return the underlying PostgreSQL saver for LangGraph"""
+        """Return the underlying PostgreSQL saver for LangGraph."""
         return self.postgres_saver
 
     def save_state(self, config: RunnableConfig, state_values: Dict[str, Any]) -> None:
-        """Save all state data to our custom database tables
+        """Save all state data to our custom database tables.
 
         Args:
             config: LangGraph config
@@ -112,7 +114,7 @@ class AlphaGPTCheckpointer:
         save_backtest_results(thread_id, checkpoint_id, state_values)
 
     def get_hypothesis_history(self, thread_id: str) -> List[Dict[str, Any]]:
-        """Get the history of hypotheses for a thread
+        """Get the history of hypotheses for a thread.
 
         Args:
             thread_id: The thread ID to query
@@ -123,7 +125,7 @@ class AlphaGPTCheckpointer:
         return get_hypothesis_history(thread_id)
 
     def get_alphas_for_hypothesis(self, hypothesis_id: int) -> List[Dict[str, Any]]:
-        """Get all alphas for a specific hypothesis
+        """Get all alphas for a specific hypothesis.
 
         Args:
             hypothesis_id: The hypothesis ID to query
@@ -134,7 +136,7 @@ class AlphaGPTCheckpointer:
         return get_alphas_for_hypothesis(hypothesis_id)
 
     def get_backtest_results_for_alpha(self, alpha_id: int) -> List[Dict[str, Any]]:
-        """Get all backtest results for a specific alpha
+        """Get all backtest results for a specific alpha.
 
         Args:
             alpha_id: The alpha ID to query
@@ -147,6 +149,7 @@ class AlphaGPTCheckpointer:
 
 def get_checkpoint_manager() -> AlphaGPTCheckpointer:
     """Create and return an AlphaGPT checkpointer instance.
+
     This manages both LangGraph checkpointing and our custom data storage.
 
     Returns:

@@ -1,5 +1,4 @@
-"""Alpha factor database operations for AlphaGPT
-"""
+"""Alpha factor database operations for AlphaGPT."""
 import uuid
 from typing import Any, Dict, List, Optional
 
@@ -14,10 +13,10 @@ def save_alphas(
     checkpoint_id: str,
     state_values: Dict[str, Any],
     hypothesis_id: int,
-    session: Optional[Session] = None
+    session: Optional[Session] = None,
 ) -> List[Alpha]:
-    """Save alpha data from the graph state to our database
-    
+    """Save alpha data from the graph state to our database.
+
     Args:
         thread_id: LangGraph thread ID
         checkpoint_id: LangGraph checkpoint ID
@@ -105,8 +104,8 @@ def save_alphas(
 
 
 def get_alphas_for_hypothesis(hypothesis_id: int) -> List[Dict[str, Any]]:
-    """Get all alphas for a specific hypothesis
-    
+    """Get all alphas for a specific hypothesis.
+
     Args:
         hypothesis_id: The hypothesis ID to query
         

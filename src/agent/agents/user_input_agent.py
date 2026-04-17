@@ -1,3 +1,4 @@
+"""Agent for capturing user trading idea input."""
 # src/agent/agents/user_input_agent.py
 from typing import Any, Dict
 

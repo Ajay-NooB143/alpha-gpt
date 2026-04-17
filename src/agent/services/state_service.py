@@ -1,4 +1,4 @@
-"""State management service for AlphaGPT
+"""State management service for AlphaGPT.
 
 This module provides functions for working with graph states and history.
 """
@@ -16,7 +16,7 @@ def invoke_graph_with_state(
     thread_id: Optional[str] = None,
     checkpoint_id: Optional[str] = None,
 ) -> State:
-    """Invoke the graph with an initial state, optionally continuing from a thread
+    """Invoke the graph with an initial state, optionally continuing from a thread.
 
     Args:
         initial_state: The initial state to pass to the graph
@@ -42,7 +42,7 @@ def invoke_graph_with_state(
 
 
 def get_state_history(thread_id: str) -> Dict[str, Any]:
-    """Get the full history of a thread, including hypotheses, alphas, and backtest results
+    """Get the full history of a thread, including hypotheses, alphas, and backtest results.
 
     Args:
         thread_id: Thread ID to get history for
